@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:weather_app/components/forecast_component.dart';
 import 'package:weather_app/constants/asset_constants.dart';
+import 'package:weather_app/enums.dart';
 import 'package:weather_app/extensions.dart';
 import 'package:weather_app/utils.dart';
 
@@ -76,6 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
               date: DateTime.now(),
               humidity: 62,
               temperature: 20,
+              clouds: Clouds.SUN_CLOUD_MID_RAIN,
             ),
           ],
         ),

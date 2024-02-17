@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:storybook_flutter/storybook_flutter.dart';
+import 'package:weather_app/storybook/stories/button_component_story.dart';
 import 'package:weather_app/storybook/stories/forecast_component_story.dart';
 import 'package:weather_app/utils.dart';
 
@@ -33,7 +34,7 @@ class WeatherAppStorybook extends StatelessWidget {
                 textTheme: TextTheme(bodyMedium: TextStyle(fontSize: 30.sp)),
               ),
               child: Storybook(
-                initialStory: "Components/ForecastComponent",
+                initialStory: "Components/ButtonComponent",
                 showPanel: true,
                 plugins: [
                   DeviceFramePlugin(
@@ -49,6 +50,7 @@ class WeatherAppStorybook extends StatelessWidget {
                 ],
                 stories: [
                   ForecastComponentStory(),
+                  ButtonComponentStory(),
                 ],
               ),
             );

@@ -1,29 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:weather_app/constants/asset_constants.dart';
+import 'package:weather_app/constants/cloud_asset.dart';
+import 'package:weather_app/enums.dart';
 import 'package:weather_app/extensions.dart';
 import 'package:weather_app/theme/theme.dart';
 import 'package:gap/gap.dart';
 
+enum ForecastType {
+  HOURLY,
+  DAILY;
+}
+
 class ForecastComponent extends StatelessWidget {
-  final DateFormat _format = DateFormat('j');
   final int humidity;
   final int temperature;
   final DateTime date;
+  final Clouds clouds;
+  final ForecastType forecastType;
+
+  final DateTime now = DateTime.now();
 
   ForecastComponent({
     super.key,
     required this.date,
     required this.humidity,
     required this.temperature,
+    required this.clouds,
+    this.forecastType = ForecastType.HOURLY,
   });
 
-  bool get isNow => _format.format(date) == _format.format(DateTime.now());
+  bool get isNow {
+    if (now.year != date.year || now.month != date.month || now.day != date.day) {
+      return false;
+    }
+    if (forecastType == ForecastType.HOURLY) {
+      return now.hour == date.hour;
+    }
+    return true;
+  }
+
+  String get formattedDate {
+    if (forecastType == ForecastType.HOURLY) {
+      return DateFormat('j').format(date);
+    }
+    return DateFormat('EEE').format(date);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(
+        minWidth: 60.p,
+      ),
       padding: EdgeInsets.symmetric(horizontal: 8.p, vertical: 16.p),
       decoration: BoxDecoration(
         color: isNow ? const Color(0xFF48319d) : const Color(0xFF35316b),
@@ -37,7 +65,7 @@ class ForecastComponent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            _format.format(date),
+            isNow && forecastType == ForecastType.HOURLY ? "NOW" : formattedDate,
             style: BaseTheme.textStyles.bold.subheadline.copyWith(
               color: Colors.white,
             ),
@@ -50,18 +78,21 @@ class ForecastComponent extends StatelessWidget {
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                Image.asset(
-                  AssetConstants.moonCloudMidRain,
-                  height: 32.p,
-                  width: 32.p,
-                ),
+                if (cloudAsset.containsKey(clouds))
+                  Image.asset(
+                    cloudAsset[clouds]!,
+                    height: 32.p,
+                    width: 32.p,
+                  ),
                 Positioned(
-                  top: 26.p,
+                  width: 32.p,
+                  top: 30.p,
                   child: Text(
                     '$humidity%',
                     style: BaseTheme.textStyles.bold.caption1.copyWith(
                       color: const Color(0xFF40cad8),
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ],
